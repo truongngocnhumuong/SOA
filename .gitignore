@@ -1,0 +1,18 @@
+# Môi trường ảo
+venv/
+*.sqlite3
+
+# Các file Python
+__pycache__/
+*.pyc
+
+# Cấu hình VS Code
+.vscode/
+
+# Các file Django
+/myservice/settings.py
+/media/
+/static/
+
+# Logs
+*.log
