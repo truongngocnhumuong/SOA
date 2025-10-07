@@ -28,4 +28,7 @@ urlpatterns = [
     #duong dan lam moi token
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('hello.urls')),
+
+    # Giả lập cổng độc lập: localhost:8000/service-product/
+    path('service-product/', include('products.urls')),
 ]

@@ -6,12 +6,15 @@ from rest_framework.response import Response
 
 # def hello_world_view(request):
 #     return HttpResponse("Hello World!")
-
+# Lớp API Hello World được bảo vệ
 class HelloAuthAPIView(APIView):
+    # 1. Thêm lớp xác thực JWT
     authentication_classes = [JWTAuthentication]
+    # 2. Thêm lớp phân quyền: chỉ người dùng đã xác thực mới được truy cập
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
+        # Lấy thông tin user (đã được xác thực qua token)
         user_info = f"Hello {request.user.username}!" if request.user.is_authenticated else "Hello World!"
 
         return Response({
