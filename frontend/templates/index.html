@@ -1,12 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Library SOA Frontend</title>
+    <title>Library SOA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container py-5">
+<div class="container py-4">
     <h1 class="text-center mb-4">📚 Library Management (SOA)</h1>
 
     <ul class="nav nav-tabs mb-3">
@@ -16,59 +17,50 @@
     </ul>
 
     <div class="tab-content">
+        <!-- USERS -->
         <div class="tab-pane fade show active" id="users">
-            <h4>Danh sách người dùng</h4>
+            <h4>Quản lý người dùng</h4>
+            <form id="userForm" class="row g-2 mb-3">
+                <div class="col-md-4"><input type="text" class="form-control" id="username" placeholder="Tên người dùng" required></div>
+                <div class="col-md-4"><input type="email" class="form-control" id="email" placeholder="Email" required></div>
+                <div class="col-md-4"><button class="btn btn-primary w-100" type="submit">Thêm người dùng</button></div>
+            </form>
             <ul id="user-list" class="list-group"></ul>
         </div>
 
+        <!-- BOOKS -->
         <div class="tab-pane fade" id="books">
-            <h4>Danh sách sách</h4>
+            <h4>Quản lý sách</h4>
+            <form id="bookForm" class="row g-2 mb-3">
+                <div class="col-md-4"><input type="text" class="form-control" id="title" placeholder="Tên sách" required></div>
+                <div class="col-md-4"><input type="text" class="form-control" id="author" placeholder="Tác giả" required></div>
+                <div class="col-md-4"><button class="btn btn-success w-100" type="submit">Thêm sách</button></div>
+            </form>
             <ul id="book-list" class="list-group"></ul>
         </div>
 
+        <!-- BORROWS -->
         <div class="tab-pane fade" id="borrows">
-            <h4>Danh sách mượn sách</h4>
+            <h4>Quản lý mượn sách</h4>
+            <form id="borrowForm" class="row g-2 mb-3">
+                <div class="col-md-3">
+                    <select class="form-select" id="user_select" required>
+                        <option value="">Chọn người dùng</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="book_select" required>
+                        <option value="">Chọn sách</option>
+                    </select>
+                </div>
+                <div class="col-md-3"><input type="date" class="form-control" id="borrow_date" required></div>
+                <div class="col-md-3"><button class="btn btn-warning w-100" type="submit">Mượn sách</button></div>
+            </form>
             <ul id="borrow-list" class="list-group"></ul>
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    async function loadUsers() {
-    const res = await fetch('/api/user/users/');
-    const data = await res.json();
-    const list = document.getElementById('user-list');
-    list.innerHTML = '';
-    data.forEach(u => {
-        list.innerHTML += `<li class="list-group-item">${u.username} (${u.email})</li>`;
-    });
-    }
-
-    async function loadBooks() {
-    const res = await fetch('/api/book/books/');
-    const data = await res.json();
-    const list = document.getElementById('book-list');
-    list.innerHTML = '';
-    data.forEach(b => {
-        const status = b.available ? '✅ Còn' : '❌ Hết';
-        list.innerHTML += `<li class="list-group-item">${b.title} - ${b.author} (${status})</li>`;
-    });
-}
-
-    async function loadBorrows() {
-    const res = await fetch('/api/borrow/borrows/');
-    const data = await res.json();
-    const list = document.getElementById('borrow-list');
-    list.innerHTML = '';
-    data.forEach(br => {
-        list.innerHTML += `<li class="list-group-item">
-            User ID: ${br.user} | Book ID: ${br.book} | Borrow: ${br.borrow_date} | Return: ${br.return_date || 'Chưa trả'}
-        </li>`;
-    });
-}
-loadUsers();
-loadBooks();
-loadBorrows();
-</script>
+<script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>    

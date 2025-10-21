@@ -1,0 +1,82 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Quản lý mượn sách</h3>
+  <div class="input-group mb-3">
+    <input id="user" type="text" class="form-control" placeholder="Tên người dùng">
+    <input id="book" type="text" class="form-control" placeholder="Tên sách">
+    <input id="date" type="date" class="form-control">
+    <button id="borrowBtn" class="btn btn-warning">Mượn sách</button>
+  </div>
+
+  <ul id="borrowList" class="list-group"></ul>
+</div>
+
+<script>
+async function loadBorrows() {
+  const res = await fetch("http://127.0.0.1:8003/borrows/");
+  const borrows = await res.json();
+  const list = document.getElementById("borrowList");
+  list.innerHTML = "";
+
+  for (const b of borrows) {
+    const userRes = await fetch(`http://127.0.0.1:8001/users/${b.user_id}/`);
+    const bookRes = await fetch(`http://127.0.0.1:8002/books/${b.book_id}/`);
+    const user = await userRes.json();
+    const book = await bookRes.json();
+
+    const li = document.createElement("li");
+    li.className = "list-group-item";
+    li.innerHTML = `
+      #${b.id}: ${user.name} mượn "${book.title}" - Ngày mượn: ${b.borrow_date}, 
+      Ngày trả: ${b.return_date ? b.return_date : "Chưa trả"}
+      <button class="btn btn-success btn-sm float-end" onclick="returnBook(${b.id})">Trả</button>`;
+    list.appendChild(li);
+  }
+}
+
+async function borrowBook() {
+  const userName = document.getElementById("user").value;
+  const bookTitle = document.getElementById("book").value;
+  const borrowDate = document.getElementById("date").value;
+
+  const users = await (await fetch("http://127.0.0.1:8001/users/")).json();
+  const books = await (await fetch("http://127.0.0.1:8002/books/")).json();
+  const user = users.find(u => u.name === userName);
+  const book = books.find(b => b.title === bookTitle);
+
+  if (!user || !book) {
+    alert("Không tìm thấy người dùng hoặc sách!");
+    return;
+  }
+
+  await fetch("http://127.0.0.1:8003/borrows/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: user.id, book_id: book.id, borrow_date: borrowDate })
+  });
+
+  // Đánh dấu sách không còn available
+  await fetch(`http://127.0.0.1:8002/books/${book.id}/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: book.title, author: book.author, available: false })
+  });
+
+  loadBorrows();
+}
+
+async function returnBook(id) {
+  const today = new Date().toISOString().split("T")[0];
+  await fetch(`http://127.0.0.1:8003/borrows/${id}/`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ return_date: today })
+  });
+  loadBorrows();
+}
+
+document.getElementById("borrowBtn").onclick = borrowBook;
+loadBorrows();
+</script>
+{% endblock %}
