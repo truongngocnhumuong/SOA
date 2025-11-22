@@ -4,7 +4,8 @@
 
 -- Kiểm tra và sử dụng database hiện tại
 -- Thay 'myservice_db' bằng tên database bạn đang dùng
-USE myservice_db;
+CREATE DATABASE orders_database;
+USE orders_database;
 
 -- Xóa bảng cũ nếu tồn tại (cẩn thận với lệnh này!)
 -- DROP TABLE IF EXISTS order_items;
