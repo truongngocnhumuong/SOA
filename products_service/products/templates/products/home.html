@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Service - Port 8001</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .service-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .product-card h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .api-endpoints {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛍️ Products Service</h1>
+        <p>Port: 8001 | Quản lý sản phẩm</p>
+    </div>
+
+    <div class="service-info">
+        <h2>📡 API Endpoints</h2>
+        <div class="endpoint">GET /api/products/ - Lấy danh sách sản phẩm</div>
+        <div class="endpoint">GET /api/products/&lt;id&gt;/ - Lấy chi tiết sản phẩm</div>
+        <div class="endpoint">PUT /api/products/&lt;id&gt;/update/ - Cập nhật sản phẩm</div>
+    </div>
+
+    <h2>📦 Danh sách sản phẩm ({{ products.count }})</h2>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <h3>{{ product.name }}</h3>
+            <p><strong>Giá:</strong> {{ product.price }} VND</p>
+            <p><strong>Số lượng:</strong> {{ product.quantity }}</p>
+            <p><strong>Mô tả:</strong> {{ product.description|default:"Chưa có mô tả" }}</p>
+        </div>
+        {% empty %}
+        <p>Chưa có sản phẩm nào. Hãy thêm sản phẩm qua Admin!</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

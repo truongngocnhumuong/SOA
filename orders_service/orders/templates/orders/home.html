@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Service - Port 8002</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .service-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .order-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .order-card h3 {
+            margin-top: 0;
+            color: #f5576c;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.pending { background: #ffc107; color: white; }
+        .status.completed { background: #28a745; color: white; }
+        .status.cancelled { background: #dc3545; color: white; }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #f5576c;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Orders Service</h1>
+        <p>Port: 8002 | Quản lý đơn hàng</p>
+    </div>
+
+    <div class="service-info">
+        <h2>📡 API Endpoints</h2>
+        <div class="endpoint">POST /api/orders/ - Tạo đơn hàng mới</div>
+        <div class="endpoint">POST /api/order_items/ - Thêm sản phẩm vào đơn hàng</div>
+        <div class="endpoint">GET /api/orders/list/ - Lấy danh sách đơn hàng</div>
+        <div class="endpoint">GET /api/orders/&lt;id&gt;/ - Lấy chi tiết đơn hàng</div>
+        <div class="endpoint">PUT /api/orders/&lt;id&gt;/update/ - Cập nhật trạng thái</div>
+    </div>
+
+    <h2>📦 Danh sách đơn hàng ({{ orders.count }})</h2>
+    {% for order in orders %}
+    <div class="order-card">
+        <h3>Đơn hàng #{{ order.id }}</h3>
+        <p><strong>Khách hàng:</strong> {{ order.customer_name }}</p>
+        <p><strong>Email:</strong> {{ order.customer_email }}</p>
+        <p><strong>Tổng tiền:</strong> {{ order.total_amount }} VND</p>
+        <p><strong>Trạng thái:</strong> <span class="status {{ order.status }}">{{ order.status }}</span></p>
+        <p><strong>Ngày tạo:</strong> {{ order.created_at|date:"d/m/Y H:i" }}</p>
+    </div>
+    {% empty %}
+    <p>Chưa có đơn hàng nào.</p>
+    {% endfor %}
+</body>
+</html>
